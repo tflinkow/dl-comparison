@@ -1,0 +1,183 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{colormaps, colorbrewer, groupplots}
+
+\usepackage{amsmath}
+
+\pgfplotsset{
+  compat=1.18,
+  cycle list/Set1,
+  legend style={font=\tiny},
+  every axis label/.append style={font=\footnotesize},
+  title style={font=\footnotesize},
+  tick label style={font=\scriptsize},
+  %
+  results/.style={
+    width=6.4cm,
+    ytick={0,0.2,...,1.0},
+    xtick={0,50,...,200},
+    ymin=0,
+    ymax=1,
+    legend pos=outer north east,
+    legend cell align={left},
+    enlargelimits=true,
+    xlabel=Epoch,
+    ylabel=Accuracy,
+    every axis plot post/.append style={
+      thick,
+      table/col sep=comma,
+      table/x=Epoch,
+    }
+  },
+  group/results/.style={
+    group style={
+      group size=2 by 1, 
+      ylabels at=edge left,
+      x descriptions at=edge bottom,
+      horizontal sep=0.25cm,
+    }, 
+    results,
+  },
+}
+
+\begin{document}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[group/results, group style={
+      group size=2 by 2,
+      x descriptions at=edge bottom,
+      ylabels at=edge left,
+      horizontal sep=0.25cm,
+      vertical sep=0.25cm,
+    }]
+
+    \nextgroupplot[title=Prediction, ylabel=Accuracy]
+      \addplot+[densely dotted] table [y=Test-P-Acc] {reports/report_fmnist_baseline.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_dl2.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_g.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_kd.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_lk.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_gg.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_rc.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_rc-s.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_rc-phi.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_fmnist_yg.csv};
+      \coordinate (c1) at (rel axis cs:0,1);
+    \nextgroupplot[title=Constraint, yticklabel pos=right]
+      \addplot+[densely dotted] table [y=Test-C-Acc] {reports/report_fmnist_baseline.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_dl2.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_g.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_kd.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_lk.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_gg.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_rc.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_rc-s.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_rc-phi.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_fmnist_yg.csv};
+      \coordinate (c2) at (rel axis cs:1,1);
+    \nextgroupplot
+      \addplot+[densely dotted] table [y=Test-P-Acc] {reports/report_cifar10_baseline.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_dl2.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_g.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_kd.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_lk.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_gg.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_rc.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_rc-s.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_rc-phi.csv};
+      \addplot table [y=Test-P-Acc] {reports/report_cifar10_yg.csv};
+      \coordinate (c1) at (rel axis cs:0,1);
+    \nextgroupplot[ 
+      yticklabel pos=right, 
+      legend style={
+        legend columns=5,
+        fill=none,
+        draw=black,
+        anchor=center,
+        align=center
+      },
+      legend to name=full-legend-csim
+    ]
+      \addplot+[densely dotted] table [y=Test-C-Acc] {reports/report_cifar10_baseline.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_dl2.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_g.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_kd.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_lk.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_gg.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_rc.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_rc-s.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_rc-phi.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_cifar10_yg.csv};
+
+      \addlegendentry{Baseline}
+      \addlegendentry{DL2}
+      \addlegendentry{$I_\text{G}$}
+      \addlegendentry{$I_\text{KD}$}
+      \addlegendentry{$I_\text{\L K}$}
+      \addlegendentry{$I_\text{GG}$}
+      \addlegendentry{$I_\text{RC}$}
+      \addlegendentry{$(I_\text{RC})_{s=9}$}
+      \addlegendentry{$(I_\text{RC})_{\phi(x)=x^2}$}
+      \addlegendentry{$I_\text{YG}$}
+      \coordinate (c2) at (rel axis cs:1,1);
+    \end{groupplot}
+    \coordinate (c3) at ($(c1)!.5!(c2)$);
+    \node[below] at (c3 |- current bounding box.south) {\pgfplotslegendfromname{full-legend-csim}};
+  \end{tikzpicture}
+  \vspace{-0.25cm}
+  \caption{The figure shows how prediction accuracy (left column) and constraint accuracy (right column) change over time when training with the class-similarity constraint for 200 epochs with different logics on Fashion-MNIST (top row) and CIFAR-10 (bottom row).}
+  \label{fig:plots_csimilarity}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[group/results]
+      \nextgroupplot[title=Prediction, ylabel=Accuracy]
+        \addplot+[densely dotted] table [y=Test-P-Acc] {reports/report_gtsrb_baseline.csv};
+        \addplot table [y=Test-P-Acc] {reports/report_gtsrb_dl2.csv};
+        \addplot table [y=Test-P-Acc] {reports/report_gtsrb_g.csv};
+        \addplot table [y=Test-P-Acc] {reports/report_gtsrb_lk.csv};
+        \addplot table [y=Test-P-Acc] {reports/report_gtsrb_rc.csv};
+        \addplot table [y=Test-P-Acc] {reports/report_gtsrb_yg.csv};
+        \coordinate (c1) at (rel axis cs:0,1);
+      \nextgroupplot[title=Constraint, 
+        yticklabel pos=right, 
+        legend style={
+          at={($(0,0)+(1cm,1cm)$)},
+          legend columns=6,
+          fill=none,
+          draw=black,
+          anchor=center,
+          align=center
+        },
+        legend to name=full-legend-gtsrb
+      ]
+      \addplot+[densely dotted] table [y=Test-C-Acc] {reports/report_gtsrb_baseline.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_gtsrb_dl2.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_gtsrb_g.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_gtsrb_lk.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_gtsrb_rc.csv};
+      \addplot table [y=Test-C-Acc] {reports/report_gtsrb_yg.csv};
+
+      \addlegendentry{Baseline}
+      \addlegendentry{DL2}
+      \addlegendentry{$T_\text{G}$}
+      \addlegendentry{$T_\text{\L K}$}
+      \addlegendentry{$T_\text{RC}$}
+      \addlegendentry{$T_\text{YG}$}
+      \coordinate (c2) at (rel axis cs:1,1);
+    \end{groupplot}
+    \coordinate (c3) at ($(c1)!.5!(c2)$);
+    \node[below] at (c3 |- current bounding box.south) {\pgfplotslegendfromname{full-legend-gtsrb}};
+  \end{tikzpicture}
+  \vspace{-0.25cm}
+  \caption{The figure shows how prediction accuracy (left column) and constraint accuracy (right column) change over time when training with the group constraint for 200 epochs with different logics on GTSRB.}
+  \label{fig:plots_group}
+\end{figure}
+
+\end{document}

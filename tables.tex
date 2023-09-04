@@ -1,0 +1,46 @@
+\documentclass[a4paper]{scrartcl}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{subcaption}
+
+\usepackage{amsmath}
+\usepackage{siunitx}
+
+\begin{document}
+
+\begin{table}
+  \caption{Results. P/C is prediction / constraint accuracy in \%.}
+  \begin{subtable}[t]{0.7\textwidth}
+    \centering
+    \subcaption{Class-Similarity constraint.}
+    \small
+    \input{table_fmnist_cifar10}
+  \end{subtable}%
+  \begin{subtable}[t]{0.3\textwidth}
+    \centering
+    \subcaption{Group constraint.}
+    \small
+    \input{table_gtsrb}
+  \end{subtable}
+\end{table}
+
+\begin{table}
+  \caption{Average epoch train times in seconds.}
+  \begin{subtable}[t]{0.7\textwidth}
+    \centering
+    \subcaption{Class-Similarity constraint.}
+    \label{tab:results-csimilarity-times}
+    \small
+    \input{table_fmnist_cifar10_times}
+  \end{subtable}%
+  \begin{subtable}[t]{0.3\textwidth}
+    \centering
+    \subcaption{Group constraint.}
+    \label{tab:results-group-times}
+    \small
+    \input{table_gtsrb_times}
+  \end{subtable}
+\end{table}
+
+\end{document}

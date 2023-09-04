@@ -1,0 +1,187 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{groupplots}
+
+\usepackage{amsmath}
+
+\pgfplotsset{
+  compat=1.18,
+  legend style={font=\tiny},
+  every axis label/.append style={font=\footnotesize},
+  title style={font=\footnotesize},
+  tick label style={font=\scriptsize},
+  %
+  lambda-search/.style={
+    xlabel={Prediction Accuracy},
+    ylabel={Constraint Accuracy},
+    scatter,
+    every axis label/.append style={font=\footnotesize},
+    title style={font=\footnotesize},
+    tick label style={font=\scriptsize},
+    point meta=explicit symbolic,
+    nodes near coords*={%
+      \pgfmathparse{\pgfplotspointmeta==0 ? "Baseline" : \pgfplotspointmeta}%
+      \pgfmathresult%
+    },
+    nodes near coords style={font=\tiny, black, anchor=north},
+    /pgfplots/.cd,
+    every axis plot post/.append style={
+      visualization depends on={\thisrow{Lambda} \as \pgfplotspointmeta},
+      table/col sep=comma, 
+      table/x=P-Acc, 
+      table/y=C-Acc,
+      table/meta=Lambda
+    }
+  }
+}
+
+\newcommand{\drawDiagonal}{
+  \draw[dashed] 
+    (axis cs:\pgfkeysvalueof{/pgfplots/xmin},\pgfkeysvalueof{/pgfplots/xmin}) 
+    -- 
+    (axis cs:\pgfkeysvalueof{/pgfplots/xmax},\pgfkeysvalueof{/pgfplots/xmax});
+}
+
+\begin{document}
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+      group style={
+        group size=3 by 3, 
+        ylabels at=edge left,
+        xlabels at=edge bottom,
+        horizontal sep=1cm,
+        vertical sep=1.5cm,
+      }, 
+      lambda-search,
+      enlargelimits=true,
+      height=5.8cm,
+      width=5.8cm]
+
+      \nextgroupplot[title={$I_\text{DL2}$}]
+        \addplot table {lambda-search/fmnist-dl2.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{G}$}]
+        \addplot table {lambda-search/fmnist-g.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{KD}$}]
+        \addplot table {lambda-search/fmnist-kd.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{\L K}$}]
+        \addplot table {lambda-search/fmnist-lk.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{GG}$}]
+        \addplot table {lambda-search/fmnist-gg.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{RC}$}]
+        \addplot table {lambda-search/fmnist-rc.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$(I_\text{RC})_{s=9}$}]
+        \addplot table {lambda-search/fmnist-rc-s.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$(I_\text{RC})_{\phi=x^2}$}]
+        \addplot table {lambda-search/fmnist-rc-phi.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{YG}$}]
+        \addplot table {lambda-search/fmnist-yg.csv};
+        \drawDiagonal
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{The figure displays prediction and constraint accuracy obtained when training with varying values of $\lambda$ with the class-similarity constraint on Fashion-MNIST for 200 epochs.}
+  \label{fig:plots_lambda_search_fmnist}
+\end{figure}
+
+\newpage
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+      group style={
+        group size=3 by 3, 
+        ylabels at=edge left,
+        xlabels at=edge bottom,
+        horizontal sep=1cm,
+        vertical sep=1.5cm,
+      }, 
+      lambda-search,
+      enlargelimits=true,
+      height=5.8cm,
+      width=5.8cm]
+
+      \nextgroupplot[title={$I_\text{DL2}$}]
+        \addplot table {lambda-search/cifar10-dl2.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{G}$}]
+        \addplot table {lambda-search/cifar10-g.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{KD}$}]
+        \addplot table {lambda-search/cifar10-kd.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{\L K}$}]
+        \addplot table {lambda-search/cifar10-lk.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{GG}$}]
+        \addplot table {lambda-search/cifar10-gg.csv};
+        \drawDiagonal
+       \nextgroupplot[title={$I_\text{RC}$}]
+        \addplot table {lambda-search/cifar10-rc.csv};
+        \drawDiagonal
+       \nextgroupplot[title={$(I_\text{RC})_{s=9}$}]
+        \addplot table {lambda-search/cifar10-rc-s.csv};
+        \drawDiagonal
+       \nextgroupplot[title={$(I_\text{RC})_{\phi=x^2}$}]
+        \addplot table {lambda-search/cifar10-rc-phi.csv};
+        \drawDiagonal
+       \nextgroupplot[title={$I_\text{YG}$}]
+        \addplot table {lambda-search/cifar10-yg.csv};
+        \drawDiagonal
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{The figure displays prediction and constraint accuracy obtained when training with varying values of $\lambda$ with the class-similarity constraint on CIFAR-10 for 200 epochs.}
+  \label{fig:plots_lambda_search_cifar10}
+\end{figure}
+
+\newpage
+
+\begin{figure}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+      group style={
+        group size=3 by 2, 
+        ylabels at=edge left,
+        xlabels at=edge bottom,
+        horizontal sep=1cm,
+        vertical sep=1.5cm,
+      }, 
+      lambda-search,
+      enlargelimits=true,
+      height=5.8cm,
+      width=5.8cm]
+      \nextgroupplot[title={$I_\text{DL2}$}]
+        \addplot table {lambda-search/gtsrb-dl2.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{G}$}]
+        \addplot table {lambda-search/gtsrb-g.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{\L K}$}, ]
+        \addplot table {lambda-search/gtsrb-lk.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{RC}$}]
+        \addplot table {lambda-search/gtsrb-rc.csv};
+        \drawDiagonal
+      \nextgroupplot[title={$I_\text{YG}$}]
+        \addplot table {lambda-search/gtsrb-yg.csv};
+        \drawDiagonal
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{The figure displays prediction and constraint accuracy obtained when training with varying values of $\lambda$ with the group constraint on GTSRB for 200 epochs.}
+  \label{fig:plots_lambda_search_gtsrb}
+\end{figure}
+
+\end{document}
